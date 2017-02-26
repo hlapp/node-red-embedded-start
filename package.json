@@ -1,0 +1,30 @@
+{
+  "name": "node-red-embedded-start",
+  "version": "0.0.1",
+  "description": "Enables waiting for flows to have started for embedded Node-RED applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/**.js",
+    "lint": "eslint .",
+    "pretest": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hlapp/node-red-embedded-start.git"
+  },
+  "keywords": [
+    "node-red",
+    "embedded"
+  ],
+  "author": "Hilmar Lapp <hilmar@lappland.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hlapp/node-red-embedded-start/issues"
+  },
+  "homepage": "https://github.com/hlapp/node-red-embedded-start#readme",
+  "devDependencies": {
+    "eslint": "^3.16.1",
+    "node-red": "^0.16.2",
+    "tape": "^4.6.3"
+  }
+}
