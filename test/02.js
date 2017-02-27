@@ -1,7 +1,6 @@
 "use strict";
 
-var test = require('tape'),
-    delay = require('delay');
+var test = require('tape');
 var path = require('path');
 var embeddedStart = require('../');
 
@@ -79,7 +78,7 @@ test('can inject wait into RED.start()', function(t) {
     embeddedStart.inject(RED);
     t.notEqual(RED.start, REDstart, 'injects again if RED.start isn\'t ours');
 
-    RED.stop().then(delay(1000)).then(() => RED.start()).then(() => {
+    RED.start().then(() => {
         t.ok(RED.nodes.getFlows(), 'getFlows() returns a valid value right away');
         let prom;
         t.doesNotThrow(() => { prom = addFlow() },
