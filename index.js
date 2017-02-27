@@ -11,7 +11,9 @@ function waitNodesStarted(RED, timeout, result) {
         // timeout with failure
         let timer = setTimeout(() => {
             events.removeListener('nodes-started', nodesStarted);
-            reject(new Error("timed out waiting for flows to start"));
+            let err = new Error("timed out waiting for flows to start");
+            if (result !== undefined) err.result = result;
+            reject(err);
         }, timeout);
 
         // handler for 'nodes-started' event

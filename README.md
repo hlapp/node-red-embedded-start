@@ -58,9 +58,10 @@ RED.start().then(embeddedStart(RED)).then((result) => {
     // result is whatever RED.start() resolved to
     // RED.node.getFlow() etc are now ready to use
 }).catch((err) => {
-    // theoretically, RED.start() could have rejected, but in practice
-    // this isn't possible (at present) given the Node-RED code
-    // so in practice embeddedStart() timed out (see below)
+    if (/^timed out/.test(err.message)) {
+        // embeddedStart() timed out
+        // the value that RED.start() resolved to is available as err.result
+    }
 });
 ```
 
@@ -74,8 +75,21 @@ embeddedStart.inject(RED);
 // then use RED.start() just as you would normally
 RED.start().then((result) => {
     // RED.node.getFlow() etc are now ready to use
+}).catch((err) => {
+    // same as above example
 });
 ```
+
+In either case, the promise returned by the function settles in one of the
+following three ways (the "result value" is optional and should normally be
+the value to which `RED.start()` resolves):
+1. If the flows API is ready already, the promise resolves immediately with
+   the result value passed in.
+2. When the `nodes-started` event fires, the promise resolves with the result
+   value passed in.
+3. If the timeout is reached before the `nodes-started` event fires, the
+   promise rejects with an error. If a result value different from `undefined`
+   is passed in, it is passed through as the `result` property of the error.
 
 ### Usage & API details
 
