@@ -4,7 +4,7 @@
   "description": "Enables waiting for flows to have started for embedded Node-RED applications",
   "main": "index.js",
   "scripts": {
-    "test": "tape test/**.js",
+    "test": "tape test/01.js && tape test/02.js",
     "lint": "eslint .",
     "pretest": "npm run lint"
   },
@@ -23,8 +23,10 @@
   },
   "homepage": "https://github.com/hlapp/node-red-embedded-start#readme",
   "devDependencies": {
+    "delay": "^1.3.1",
     "eslint": "^3.16.1",
     "node-red": "^0.16.2",
+    "sinon": "^1.17.7",
     "tape": "^4.6.3"
   }
 }

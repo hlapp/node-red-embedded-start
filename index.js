@@ -25,28 +25,38 @@ function waitNodesStarted(RED, timeout, result) {
 }
 
 var REDstart = module.exports = function(RED, timeout, result) {
-    let genFunc = true;
-    if (arguments.length === 1 && (RED === undefined || ! RED.start)) {
-        if (arguments.length > 0) result = arguments[arguments.length-1];
+    let genFunc = arguments.length <= 2;
+    // is the first argument not RED?
+    if (RED === undefined || ! RED.start) {
+        // as a default, load RED object from modules
         RED = require('node-red');
-        genFunc = false;
+        // if there is only one argument but it isn't RED, assume we are being
+        // used directly as the wait function
+        if (arguments.length === 1) genFunc = false;
     }
-    if (arguments.length < 3 || timeout === undefined) timeout = FLOWS_TIMEOUT;
+    // if we are being used directly, the last argument is the result value to be passed through
+    if (arguments.length > 0) result = arguments[arguments.length-1];
+    // timeout can only be provided in the 2 and 3-argument form
+    if (arguments.length < 2 || timeout === undefined) timeout = FLOWS_TIMEOUT;
     if (genFunc) {
-        return function(value) { waitNodesStarted(RED, timeout, value) };
+        return function(value) { return waitNodesStarted(RED, timeout, value) };
     }
     return waitNodesStarted(RED, timeout, result);
 };
 
+var injected = new Map();
+
 REDstart.inject = function(RED, timeout) {
     if (! RED) RED = require('node-red');
     let start = RED.start;
+    // injected previously already?
+    if (injected.get(RED) === start) return;
+    // if not, inject ourselves
+    RED.start = injectedStart;
+    injected.set(RED, injectedStart);
+
     // the function we will be injecting
     function injectedStart() {
         return start(arguments).then(REDstart(RED, timeout));
     }
-    // injected previously already?
-    if (start === injectedStart) return;
-    // if not, inject ourselves
-    RED.start = injectedStart;
 };
