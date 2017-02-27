@@ -4,6 +4,14 @@ node_js:
     - "6"
     - "4"
 sudo: false
-script:
-    npm test
-
+script: npm test
+deploy:
+  provider: npm
+  email:
+    secure: i8hdWnVnlTXypykTBj3NLhf0PkjepcoiCxs0lAPJwupuBpm4NidmSJLYLomccx1qOqsS4CteO01PQ7pQVA0zMjTFbfmP6SAsy8VH3JGeMz+DMgrhnSIzAlyJhIqerSSj+WrB3jCCommKverwLoPdblZK47toZGj7GYKvCDMzAomKE1LW4TqmdQP2Hs1aYq8fxe4ubsBYLGFzGEafB8OrA53IqYTR8e9ohHqje9TLsBT8DVLqwBPXnS70z30DPVzK33DBP8tgYfAMZAYNvUCRhWBk4/g0PMDiiiA3g7bTiSHZRrtUprrP1q2bfka/OkwO87k9anFuZ/ufQt+IMKPPmQJ1lGJrz3f5AIX51r018lMtjG8ogLmlw2cA7DpKZm25BKwt8dsJHi6YjgjVTVXNY6e/lFpBxWx/QfSDzl95RB47d2VFni3EAtEx5xeVat7odggKHP6NHKKK2DZKkJ/F6dzscHSCTOHomC9993jM3H/Rm+EwHM5iNRhdN0GM3dYHzGR3y7rXZU5ElqO8lGIK5X71jwJu9x7YaVVEXgEUu6GckB3EffIfXO33Hn3uPTEUiIzMGDwBTYgAoOdY14gamam20mWC4FxOBb9OQbNfiXsyaETwtjny6jmHD8KPLlLPpnlDKm8nkZJk+WGaOSMAxe7RdWayD/UEZUZ/Wr+5QjE=
+  api_key:
+    secure: DkBm3d4PoeS1zMwZDXdjxkdIWztGRehRJOZN9c3gHL3AsOx9XdBXxd1BHdrkljRn5O+naNub64VW5Kxy2yGLTyCguk9nzQy/fTqe/j3UBHw0KV0rmC1Q1OfGdaLPIZJgCCFSakHgpSRJfvsDGTBk00fZcCvwRFmGVgPAqDTl2ZeSTKwMv+0N8qDgWDQ02vAXxg+isQURUbSg3+oHdT0vVCxkGRSobEedhBgMzSHnYgRe4116fFzE+97aTVm3TEDn3DIEFLu2mWSTGkh3cJYtTbMueQXXS/j1rKrjOXUwvBrMHpHtfSe5w8dRfVXMqkap8oeprmB71Bq1dg0pPmD2yOOOb4XO5EbPSQQ0f5KcMi+NHgp/LfGvP5m4MpfFp+cNrvL1zjBMGWFQTe1jvh3rVREg/RkZSIsdH1terggO7v3ZcLjBLZ0Hvn1dJm5O1Rf29Uqq5aFE2IzPFK8mziAfCNwgnsDEXQqaOmzLz48ayMK3gPd/Si6LSs0+xy3gya0WEqTsdJHxQaq8A5yN6X1Bb9OmLeE6XJuIfrZ5X/J4Ty4k8fHFvOTqM/qlD6F61Fzod9hxC6606L8F2V/pbKpCZl/Uw5NkiCrAuuXXc4zSkYZhj6tN74z8F5OfMGAvQ1LMx3EknUKb65cXIuIDJK/fpGd9/3BUkToM/V5JU/v7KdY=
+  on:
+    tags: true
+    repo: hlapp/node-red-embedded-start
+    node: "4"
