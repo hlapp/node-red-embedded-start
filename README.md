@@ -154,6 +154,9 @@ the code driving the flow API is initialized and thus ready for interaction.
 
 * If you run Node-RED standalone rather than embedded, the problem does not
   apply in practice, and hence this module will have no benefits for you.
+* The method for waiting implemented here will only work while the
+  `nodes-started` event fires and at the right timing. Presumably, the tests
+  should indicate when that's no longer the case.
 * Due to the highly asynchronous nature of the Node-RED startup process,
   the flow API being ready does _not_ (and _should_ not) mean that any other
   components have fully completed their initialization as well. For example,
