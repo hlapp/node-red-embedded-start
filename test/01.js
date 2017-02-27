@@ -197,3 +197,20 @@ test('waiting for \'nodes-started\' results in flow API ready', function(t) {
                        'addFlow() now returns without error');
     }).catch(failAndEnd(t));
 });
+
+test('generated function resolves immediately if flows API ready', function(t) {
+    t.plan(4);
+
+    let REDresult = {}, spy = sinon.spy();
+    t.timeoutAfter(30);
+    t.ok(RED.nodes.getFlows(), 'flows API is ready at this point');
+    embeddedStart(RED, 20, REDresult).then((result) => {
+        spy();
+        t.pass('wait function resolves immediately when flows API ready');
+        t.equal(result, REDresult, 'and passes result through');
+    }).catch(failAndEnd(t));
+    setTimeout(() => {
+        t.ok(spy.calledOnce, 'has resolved before timeout and without event');
+    }, 10);
+});
+
