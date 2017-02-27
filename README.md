@@ -113,7 +113,7 @@ RED.start().then((result) => embeddedStart(RED, undefined, result)).then(() => {
 * If only the `result` parameter is provided, `RED` will be loaded from the
   `node-red` module, and hence if that fails, the call will fail.
 
-#### Inject a wait function: `embeddedStart.inject([RED [, timeout])`
+#### Inject a wait function: `embeddedStart.inject([RED [, timeout]])`
 
 ```js
 embeddedStart.inject(RED, timeout);
