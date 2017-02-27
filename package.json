@@ -14,7 +14,8 @@
   },
   "keywords": [
     "node-red",
-    "embedded"
+    "embedded",
+    "iot"
   ],
   "author": "Hilmar Lapp <hilmar@lappland.io>",
   "license": "MIT",

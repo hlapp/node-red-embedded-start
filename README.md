@@ -13,18 +13,19 @@ in obscure internal Node-RED errors (typically, `TypeError` being thrown)
 if one calls certain runtime or admin API method too early. This module
 allows waiting deterministically for the runtime API for flows to be ready.
 
+## Use cases
+
 If your primary need is to interact programmatically with the flows API of
 an [embedded Node-RED] instance once it starts up, then this module is for
-you. One example use case likely faced by many developers (such as myself)
+you.
+
+One use case likely faced by many developers (such as myself)
 of nodes for Node-RED is running automatic testing for their node(s). Ideally
 such testing can include testing discovery, loading, and running of nodes
-by a live embedded Node-RED instance. 
-
-_(In the wild, those who run such tests, including Node-RED itself, seem
-to be using mocks of Node-RED. Not only do the mocks take a lot of code to
-create, they are also at risk of diverging from what a live Node-RED instance
-does. Hence, personally I would rather test manually than use a mock, or
-waste my time on creating one.)_
+by a live embedded Node-RED instance. Usually, one of the first steps in
+getting a node to "run" (i.e., Node-RED invoking the constructor for the
+node type) is to add it to a flow, whether one that exists or one that you
+create from scratch programmatically.
 
 ## Installation
 
@@ -56,7 +57,7 @@ promise chain from RED.start():
 var embeddedStart = require('node-red-embedded-start');
 RED.start().then(embeddedStart(RED)).then((result) => {
     // result is whatever RED.start() resolved to
-    // RED.node.getFlow() etc are now ready to use
+    // RED.node.getFlows() etc are now ready to use
 }).catch((err) => {
     if (/^timed out/.test(err.message)) {
         // embeddedStart() timed out
@@ -99,6 +100,14 @@ the value to which `RED.start()` resolves):
 var waitFunc = embeddedStart(RED, timeout);
 
 RED.start().then(waitFunc).then(() => {
+    // do whatever
+});
+```
+
+Usually, because the wait function will only be used once, one will write
+the call directly into the promise chain:
+```js
+RED.start().then(embeddedStart(RED, 5000)).then((result) => {
     // do whatever
 });
 ```
@@ -154,11 +163,12 @@ some time and hope for the best. Although a couple of seconds will often
 suffice, the time needed will depend on processor speed, storage speed,
 number of flows, number of nodes in those flows, and various other factors.
 A wait-and-hope-for-the-best solution seems therefore unsatisfactory, and
-still requires code to implement.
+nevertheless also requires code to implement.
 
 This issue has been brought to the attention of the Node-RED developers
-[Node-RED issue #1168], but they responded that the behaviour is intentional
-and will thus not be fixed.
+(see Node-RED issues [#1168] and [#902]), but they responded that the behaviour
+is intentional and will thus not be fixed until the behavior of an embedded
+application is fully defined and implemented.
 
 This module allows waiting instead for a certain event (`nodes-started`) to
 fire. The event fires at a point in time during the Node-RED startup when
@@ -175,13 +185,14 @@ the code driving the flow API is initialized and thus ready for interaction.
   the flow API being ready does _not_ (and _should_ not) mean that any other
   components have fully completed their initialization as well. For example,
   the constructors of nodes may themselves have launched initialization tasks
-  asynchronously, and there is no way of knowing which in which stage
-  these are. See [Node-RED issue 698] for discussion.
+  asynchronously, and there is no way of knowing in which stage
+  these are. See Node-RED issue [#698] for discussion.
 
 ## License
 
-MIT
+Available under the [MIT License](LICENSE).
 
-[Node-RED issue #1168]: https://github.com/node-red/node-red/issues/1168
-[Node-RED issue 698]: https://github.com/node-red/node-red/issues/698
+[#1168]: https://github.com/node-red/node-red/issues/1168
+[#902]: https://github.com/node-red/node-red/issues/902
+[#698]: https://github.com/node-red/node-red/issues/698
 [embedded Node-RED]: http://nodered.org/docs/embedding
