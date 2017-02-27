@@ -14,7 +14,7 @@ if one calls certain runtime or admin API method too early. This module
 allows waiting deterministically for the runtime API for flows to be ready.
 
 If your primary need is to interact programmatically with the flows API of
-an embedded Node-RED instance once it starts up, then this module is for
+an [embedded Node-RED] instance once it starts up, then this module is for
 you. One example use case likely faced by many developers (such as myself)
 of nodes for Node-RED is running automatic testing for their node(s). Ideally
 such testing can include testing discovery, loading, and running of nodes
@@ -170,3 +170,4 @@ MIT
 
 [Node-RED issue #1168]: https://github.com/node-red/node-red/issues/1168
 [Node-RED issue 698]: https://github.com/node-red/node-red/issues/698
+[embedded Node-RED]: http://nodered.org/docs/embedding
