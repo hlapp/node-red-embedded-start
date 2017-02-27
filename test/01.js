@@ -124,7 +124,7 @@ test('generated function promises to wait for \'nodes-started\'', function(t) {
 });
 
 test('generated function rejects if waiting times out', function(t) {
-    t.plan(5);
+    t.plan(7);
 
     let REDresult = {}, spy = sinon.spy();
     t.timeoutAfter(30);
@@ -133,11 +133,13 @@ test('generated function rejects if waiting times out', function(t) {
     t.ok(p instanceof Promise, 'returns promise if waiting');
     p.then(() => {
         t.fail('resolves despite timeout once nodes-started event fires');
-        t.skip('therefore no error object either');
+        for (let i = 0; i < 3; i++) { t.skip('not applicable in this case') }
     }).catch((err) => {
         spy();
         t.pass('returned promise rejects if timeout before event fires');
         t.ok(err instanceof Error, 'rejects with an Error object');
+        t.ok(/^timed out/.test(err.message), 'rejection is due to timing out');
+        t.equal(err.result, REDresult, 'passes result through as error.result');
     });
     setTimeout(() => {
         t.ok(spy.notCalled, 'does not resolve before node-started event fires');

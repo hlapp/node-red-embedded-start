@@ -4,7 +4,7 @@ const FLOWS_TIMEOUT = 30000;
 
 function waitNodesStarted(RED, timeout, result) {
     // if flows are loaded and started, then all is good
-    if (RED.nodes.getFlows()) return result;
+    if (RED.nodes.getFlows()) return Promise.resolve(result);
     // otherwise wait for the nodes-started event
     let events = require('node-red/red/runtime/events');
     return new Promise((resolve, reject) => {
