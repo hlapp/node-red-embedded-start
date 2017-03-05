@@ -2,47 +2,15 @@
 
 var test = require('tape'),
     sinon = require('sinon');
-var path = require('path');
-var embeddedStart = require('../');
-
-const REDsettings = {
-    httpAdminRoot: false,
-    httpNodeRoot: false,
-    functionGlobalContext: {},
-    disableEditor: true,
-    userDir: path.join(__dirname, '.node-red'),
-    logging: {
-        console: {
-            level: process.env.NODE_RED_LOGLEVEL || "info"
-        }
-    }
-};
+var embeddedStart = require('../'),
+    fixture = require('./fixture');
 
 var RED;
 var REDevents;
 var testFlow;
 
-function failAndEnd(t) {
-    return (err) => {
-        t.fail(err);
-        t.end();
-    };
-}
-
 test.onFinish(function() {
-
-    function closeUp() {
-        let prom = testFlow ? RED.nodes.removeFlow(testFlow) : Promise.resolve();
-        if (RED) {
-            prom = prom.then(() => RED.stop());
-        }
-        prom.catch((e) => {
-            console.error("stopping Node-RED failed:");
-            console.error(e.stack ? e.stack : e);
-        });
-    }
-
-    closeUp();
+    fixture.closeUp(RED, testFlow);
 });
 
 test('can create and initialize Node-RED runtime', function(t) {
@@ -50,13 +18,14 @@ test('can create and initialize Node-RED runtime', function(t) {
 
     t.doesNotThrow(() => {
         RED = require('node-red');
-    }, undefined, 'instantiates Node-RED runtime without error');
-    t.doesNotThrow(RED.init.bind(RED, undefined, REDsettings),
-                   undefined,
-                   'initializes Node-RED runtime without error');
+    }, undefined, 'loads Node-RED module without error');
+    t.doesNotThrow(
+        RED.init.bind(RED, undefined, fixture.settings),
+        undefined,
+        'initializes Node-RED runtime without error');
     t.doesNotThrow(() => {
         REDevents = require('node-red/red/runtime/events');
-    }, undefined, 'loads RED events object without erorr');
+    }, undefined, 'loads Node-RED events module without error');
 });
 
 test('can be used to generate wait function', function(t) {
@@ -84,7 +53,7 @@ test('can be used to promise waiting for \'nodes-started\'', function(t) {
             spy();
             tt.pass('resolves once nodes-started event fires');
             tt.equal(result, REDresult, 'passes result through');
-        }).catch(failAndEnd(tt));
+        }).catch(fixture.failAndEnd(tt));
         setTimeout(() => {
             tt.ok(spy.notCalled, 'does not resolve before node-started event fires');
             REDevents.emit('nodes-started');
@@ -116,7 +85,7 @@ test('generated function promises to wait for \'nodes-started\'', function(t) {
         spy();
         t.pass('resolves once nodes-started event fires');
         t.equal(result, REDresult, 'passes result through');
-    }).catch(failAndEnd(t));
+    }).catch(fixture.failAndEnd(t));
     setTimeout(() => {
         t.ok(spy.notCalled, 'does not resolve before node-started event fires');
         REDevents.emit('nodes-started');
@@ -195,7 +164,7 @@ test('waiting for \'nodes-started\' results in flow API ready', function(t) {
         t.doesNotThrow(() => addFlow(t, true),
                        undefined,
                        'addFlow() now returns without error');
-    }).catch(failAndEnd(t));
+    }).catch(fixture.failAndEnd(t));
 });
 
 test('generated function resolves immediately if flows API ready', function(t) {
@@ -208,7 +177,7 @@ test('generated function resolves immediately if flows API ready', function(t) {
         spy();
         t.pass('wait function resolves immediately when flows API ready');
         t.equal(result, REDresult, 'and passes result through');
-    }).catch(failAndEnd(t));
+    }).catch(fixture.failAndEnd(t));
     setTimeout(() => {
         t.ok(spy.calledOnce, 'has resolved before timeout and without event');
     }, 10);

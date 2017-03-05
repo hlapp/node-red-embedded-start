@@ -2,52 +2,20 @@
 
 var test = require('tape'),
     sinon = require('sinon');
-var path = require('path');
-var embeddedStart = require('../');
-
-const REDsettings = {
-    httpAdminRoot: false,
-    httpNodeRoot: false,
-    functionGlobalContext: {},
-    disableEditor: true,
-    userDir: path.join(__dirname, '.node-red'),
-    logging: {
-        console: {
-            level: process.env.NODE_RED_LOGLEVEL || "info"
-        }
-    }
-};
+var embeddedStart = require('../'),
+    fixture = require('./fixture');
 
 var RED;
 var REDstart;
 var testFlow;
 
-function failAndEnd(t) {
-    return (err) => {
-        t.fail(err);
-        t.end();
-    };
-}
-
 test.onFinish(function() {
-
-    function closeUp() {
-        let prom = testFlow ? RED.nodes.removeFlow(testFlow) : Promise.resolve();
-        if (RED) {
-            prom = prom.then(() => RED.stop());
-        }
-        prom.catch((e) => {
-            console.error("stopping Node-RED failed:");
-            console.error(e.stack ? e.stack : e);
-        });
-    }
-
     if (REDstart && RED.start !== REDstart) RED.start = REDstart;
-    closeUp();
+    fixture.closeUp(RED, testFlow);
 });
 
 RED = require('node-red');
-RED.init(undefined, REDsettings);
+RED.init(undefined, fixture.settings);
 
 test('can inject wait into RED.start()', function(t) {
     t.plan(6);
@@ -86,7 +54,7 @@ test('can inject wait into RED.start()', function(t) {
                        undefined,
                        'addFlow() returns without error');
         return prom;
-    }).catch(failAndEnd(t));
+    }).catch(fixture.failAndEnd(t));
 });
 
 test('arguments with which RED.start() is called are passed on', function(t) {
@@ -107,10 +75,10 @@ test('arguments with which RED.start() is called are passed on', function(t) {
         let call = stub.getCall(1);
         RED.start = funcToRestore; // should precede last test = this is async
         t.deepEqual(call.args, ["one", "two", "three"],
-             'correctly passes through multiple arguments');
+                    'correctly passes through multiple arguments');
         t.equal(call.thisValue, RED, '"this" is set to RED');
     }).catch((err) => {
         RED.start = funcToRestore;
-        failAndEnd(t)(err);
+        fixture.failAndEnd(t)(err);
     });
 });
