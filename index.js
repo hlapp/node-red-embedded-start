@@ -57,8 +57,10 @@ REDstart.inject = function(RED, timeout) {
     RED.start = injectedStart;
     injected.set(RED, injectedStart);
 
+    /* eslint-disable no-invalid-this */
     // the function we will be injecting
     function injectedStart() {
-        return start(arguments).then(REDstart(RED, timeout));
+        return start.apply(this, arguments).then(REDstart(RED, timeout));
     }
+    /* eslint-enable no-invalid-this */
 };

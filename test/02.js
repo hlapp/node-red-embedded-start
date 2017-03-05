@@ -1,6 +1,7 @@
 "use strict";
 
-var test = require('tape');
+var test = require('tape'),
+    sinon = require('sinon');
 var path = require('path');
 var embeddedStart = require('../');
 
@@ -86,4 +87,29 @@ test('can inject wait into RED.start()', function(t) {
                        'addFlow() returns without error');
         return prom;
     }).catch(failAndEnd(t));
+});
+
+test('arguments with which RED.start() is called are passed on', function(t) {
+    t.plan(5);
+
+    let stub = sinon.stub(RED, "start");
+    stub.returns(Promise.resolve(42));
+
+    embeddedStart.inject(RED);
+    RED.start("one").then((result) => {
+        t.equal(result, 42, 'passes on to the stub we presented');
+        let call = stub.getCall(0);
+        t.deepEqual(call.args, ["one"], 'correctly passes through one argument');
+        t.equal(call.thisValue, RED, '"this" is set to RED');
+        return RED.start("one", "two", "three");
+    }).then(() => {
+        let call = stub.getCall(1);
+        t.deepEqual(call.args, ["one", "two", "three"],
+             'correctly passes through multiple arguments');
+        t.equal(call.thisValue, RED, '"this" is set to RED');
+        RED.start.restore();
+    }).catch((err) => {
+        RED.start.restore();
+        failAndEnd(t)(err);
+    });
 });
