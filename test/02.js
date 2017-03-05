@@ -92,6 +92,7 @@ test('can inject wait into RED.start()', function(t) {
 test('arguments with which RED.start() is called are passed on', function(t) {
     t.plan(5);
 
+    let funcToRestore = RED.start;
     let stub = sinon.stub(RED, "start");
     stub.returns(Promise.resolve(42));
 
@@ -104,12 +105,12 @@ test('arguments with which RED.start() is called are passed on', function(t) {
         return RED.start("one", "two", "three");
     }).then(() => {
         let call = stub.getCall(1);
+        RED.start = funcToRestore; // should precede last test = this is async
         t.deepEqual(call.args, ["one", "two", "three"],
              'correctly passes through multiple arguments');
         t.equal(call.thisValue, RED, '"this" is set to RED');
-        RED.start.restore();
     }).catch((err) => {
-        RED.start.restore();
+        RED.start = funcToRestore;
         failAndEnd(t)(err);
     });
 });
