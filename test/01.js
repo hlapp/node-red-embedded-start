@@ -62,12 +62,12 @@ test('can be used to promise waiting for \'nodes-started\'', function(t) {
 
     t.test('using defaults', function(subtest) {
         subtest.plan(4);
-        subtest.timeoutAfter(40);
+        subtest.timeoutAfter(80);
         testWaiting(embeddedStart(REDresult), subtest);
     });
     t.test('using full signature', function(subtest) {
         subtest.plan(4);
-        subtest.timeoutAfter(40);
+        subtest.timeoutAfter(80);
         testWaiting(embeddedStart(RED, 30, REDresult), subtest);
     });
     t.end();
@@ -96,7 +96,7 @@ test('generated function rejects if waiting times out', function(t) {
     t.plan(7);
 
     let REDresult = {}, spy = sinon.spy();
-    t.timeoutAfter(30);
+    t.timeoutAfter(50);
     let waitFunc = embeddedStart(RED, 20);
     let p = waitFunc(REDresult);
     t.ok(p instanceof Promise, 'returns promise if waiting');
