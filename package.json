@@ -24,8 +24,8 @@
   },
   "homepage": "https://github.com/hlapp/node-red-embedded-start#readme",
   "devDependencies": {
-    "eslint": "^3.16.1",
-    "node-red": "^0.16.2",
+    "eslint": "^4.2.0",
+    "node-red": "^0.17.2",
     "sinon": "^2.3.2",
     "tape": "^4.6.3"
   }
