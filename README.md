@@ -27,6 +27,10 @@ getting a node to "run" (i.e., Node-RED invoking the constructor for the
 node type) is to add it to a flow, whether one that exists or one that you
 create from scratch programmatically.
 
+Another use case would be to programmatically control which nodes are available
+in the palette, by disabling after startup those that are undesired or unneeded.
+See [node-red/node-red#1221](https://github.com/node-red/node-red/issues/1221).
+
 ## Installation
 
 ```
