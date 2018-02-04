@@ -1,5 +1,13 @@
 "use strict";
 
+/*
+ * Note this test suite needs to be run as its independent process, i.e., as
+ * its own invocation with tape. Otherwise the RED embedded runtime will have
+ * been initialized already, and the tests here are then not only mostly
+ * pointless, but the calls to RED.init() and RED.start() will produce
+ * warning messages.
+ */
+
 var test = require('tape'),
     sinon = require('sinon');
 var embeddedStart = require('../'),
