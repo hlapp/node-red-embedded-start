@@ -4,7 +4,7 @@
   "description": "Enables waiting for flows to have started for embedded Node-RED applications",
   "main": "index.js",
   "scripts": {
-    "test": "tape test/??.js",
+    "test": "tape test/01.js && tape test/02.js",
     "lint": "eslint .",
     "pretest": "npm run lint"
   },
