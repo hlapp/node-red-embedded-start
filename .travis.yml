@@ -1,6 +1,7 @@
 language: node_js
 dist: trusty
 node_js:
+    - "8"
     - "6"
     - "4"
 sudo: false
@@ -14,4 +15,4 @@ deploy:
   on:
     tags: true
     repo: hlapp/node-red-embedded-start
-    node: "4"
+    node: "6"
