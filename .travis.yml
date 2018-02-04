@@ -15,4 +15,4 @@ deploy:
   on:
     tags: true
     repo: hlapp/node-red-embedded-start
-    node: "4"
+    node: "6"
